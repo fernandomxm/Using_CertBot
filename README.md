@@ -12,8 +12,11 @@ pip install certbot
 /root/change_dns_oci.sh (chmod 700)
 
 #!/bin/bash
+
 OCI=/root/bin/oci
+
 echo $CERTBOT_VALIDATION
+
 $OCI dns record domain patch --zone-name-or-id domain.com.br --domain _acme-challenge.domain.com.br \
   --items '[
     {
@@ -26,7 +29,9 @@ $OCI dns record domain patch --zone-name-or-id domain.com.br --domain _acme-chal
   ]'
 
 $OCI dns record domain get --zone-name-or-id domain.com.br --domain _acme-challenge.domain.com.br
+
 dig TXT _acme-challenge.domain.com.br +short
+
 sleep 180
 
 /root/remove_dns_oci.sh (chmod 700)
@@ -34,6 +39,7 @@ sleep 180
 #!/bin/bash
 
 OCI=/root/bin/oci
+
 $OCI dns record domain patch --zone-name-or-id domain.com.br --domain _acme-challenge.domain.com.br \
   --items '[
     {
@@ -48,6 +54,7 @@ $OCI dns record domain patch --zone-name-or-id domain.com.br --domain _acme-chal
 
 #!/bin/bash
 sudo certbot --manual --preferred-challenges dns certonly --manual-auth-hook /root/chage_dns_oci.sh --manual-cleanup-hook /root/remove_dns_oci.sh --email fernando@email.com --agree-tos --eff-email -d *.domain.com.br
+
 systemctl reload nginx
 
 Resultado(Geração do certificado nesse caminho):
@@ -67,7 +74,9 @@ C:\Certbot\change_dns_oci.bat
 echo %CERTBOT_VALIDATION%
 
 oci dns record domain patch --zone-name-or-id domain.com.br --domain _acme-challenge.domain.com.br --items "[{\"domain\":\"_acme-challenge.domain.com.br\",\"rtype\":\"TXT\",\"ttl\":300,\"rdata\":\"\\\"%CERTBOT_VALIDATION%\\\"\",\"operation\":\"ADD\"}]"
+
 oci dns record domain get --zone-name-or-id domain.com.br --domain _acme-challenge.domain.com.br
+
 timeout /t 180 /nobreak
 
 C:\Certbot\remove_dns_oci.bat
